@@ -30,7 +30,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
-app.options('*', cors(corsOptions)); 
+
 
 
 import Book from "./models/book.model.js";
