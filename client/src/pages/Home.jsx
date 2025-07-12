@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
-import GoogleBookCard from "../components/GoogleBookCard";
+import GoogleBookCard from "../components/GoogleBookcard";
 import { searchBooks } from "../services/googleBookService";
 import { addBook, getBooks,fetchAllBooks } from '../services/bookService';
 import Chatbot from '../components/Chatbot';
