@@ -4,6 +4,7 @@ import auth from "../middleware/auth.middleware.js";
 import geminiAi from "../utils/gemini.js";
 const router = express.Router();
 router.post("/summary", auth, async (req, res) => {
+  
   const { title, description } = req.body;
   const shortDescription = description && description.length > 1500
     ? description.slice(0, 1500) + "..."
