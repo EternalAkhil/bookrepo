@@ -37,7 +37,7 @@ const Navbar = () => {
             </span>
             <button
               onClick={handleLogout}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg font-semibold shadow transition text-base"
+              className="bg-blue-600 hover:bg-blue-700 hover:cursor-pointer text-white px-4 py-1.5 rounded-lg font-semibold shadow transition text-base"
             >
               Logout
             </button>
@@ -46,7 +46,7 @@ const Navbar = () => {
         {!user && (
           <Link
             to="/login"
-            className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg font-semibold shadow transition text-base"
+            className="bg-blue-500 hover:bg-blue-700 hover:cursor-pointer text-white px-4 py-1.5 rounded-lg font-semibold shadow transition text-base"
           >
             Login
           </Link>

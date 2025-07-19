@@ -1,15 +1,17 @@
 import { useState } from "react";
 import API from "../services/api";
-import { useNavigate, Link } from "react-router-dom"; // <-- import Link
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Loader state
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true); // Start loader
     try {
       const res = await API.post("/auth/register", form);
       alert("Registered successfully! Please login.");
@@ -17,6 +19,8 @@ const Register = () => {
     } catch (err) {
       const msg = err.response?.data?.msg || "Registration failed.";
       setError(msg);
+    } finally {
+      setLoading(false); // Stop loader
     }
   };
 
@@ -42,6 +46,7 @@ const Register = () => {
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
             required
+            disabled={loading}
           />
         </div>
         <div>
@@ -56,6 +61,7 @@ const Register = () => {
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
             required
+            disabled={loading}
           />
         </div>
         <div>
@@ -70,6 +76,7 @@ const Register = () => {
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
             required
+            disabled={loading}
           />
         </div>
 
@@ -77,9 +84,32 @@ const Register = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition flex items-center justify-center"
+          disabled={loading}
         >
-          Register
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  fill="none"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                />
+              </svg>
+              Registering...
+            </span>
+          ) : (
+            "Register"
+          )}
         </button>
         <p className="text-sm text-center mt-2 text-gray-600">
           Already have an account?{" "}

@@ -5,17 +5,21 @@ import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false); // Loader state
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loader
     try {
       const res = await API.post("/auth/login", form);
       login(res.data);
       navigate("/");
     } catch (err) {
       alert("Login failed");
+    } finally {
+      setLoading(false); // Stop loader
     }
   };
 
@@ -38,6 +42,7 @@ const Login = () => {
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-base"
+            disabled={loading}
           />
         </div>
         <div>
@@ -51,13 +56,37 @@ const Login = () => {
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-base"
+            disabled={loading}
           />
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition text-base"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition text-base flex items-center justify-center"
+          disabled={loading}
         >
-          Login
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  fill="none"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                />
+              </svg>
+              Logging in...
+            </span>
+          ) : (
+            "Login"
+          )}
         </button>
         <p className="text-sm text-center mt-2 text-gray-600">
           Don’t have an account?{" "}

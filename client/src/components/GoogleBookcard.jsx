@@ -45,7 +45,7 @@ const GoogleBookCard = ({ book, onAdd }) => {
             <div className="flex flex-wrap gap-2 mt-1">
               <button
                 onClick={() => onAdd(volumeInfo)}
-                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded font-semibold transition whitespace-nowrap"
+                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded font-semibold transition whitespace-nowrap hover:cursor-pointer"
               >
                 Add to Library
               </button>

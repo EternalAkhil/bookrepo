@@ -194,7 +194,7 @@ const Library = () => {
 
       {/* Sticky Recommendation Button */}
       <button
-        className="fixed left-4 sm:left-6 bottom-4 sm:bottom-6 z-50 bg-purple-600 hover:bg-purple-700 text-white p-3 sm:p-4 rounded-full shadow-lg transition flex items-center justify-center"
+        className="fixed left-4 sm:left-6 bottom-4 sm:bottom-6 z-50 bg-purple-600 hover:bg-purple-700 text-white p-3 sm:p-4 rounded-full shadow-lg transition flex items-center justify-center hover:cursor-pointer"
         onClick={handleGetRecommendations}
         aria-label="Get Recommendations"
         style={{ boxShadow: "0 4px 24px 0 rgba(80,0,120,0.15)" }}
