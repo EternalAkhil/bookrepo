@@ -1,9 +1,11 @@
 import express from "express";
 const app = express();
-import cors from "cors"; // Ensure 'cors' is imported
+import cors from "cors"; 
 
-// Middleware to parse JSON bodies
+
+import helmet from 'helmet'
 app.use(express.json());
+app.use(helmet())
 
 const allowedOrigins = [
     process.env.FRONTEND_URL, 
@@ -34,9 +36,10 @@ app.use(cors(corsOptions));
 
 
 import Book from "./models/book.model.js";
+import { ratelimiter } from "./middleware/auth.middleware.js";
 
 import userRouter from "./routes/user.routes.js";
-app.use("/api/auth", userRouter);
+app.use("/api/auth", ratelimiter,userRouter);
 
 import bookRouter from "./routes/books.router.js";
 app.use("/api/books", bookRouter);

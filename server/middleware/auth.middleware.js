@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-
+import rateLimit from "express-rate-limit"
 const auth = (req, res, next) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
   if (!token) return res.status(401).json({ msg: "No token, access denied" });
@@ -12,5 +12,13 @@ const auth = (req, res, next) => {
     res.status(400).json({ msg: "Invalid token" });
   }
 };
+
+export const ratelimiter = rateLimit({
+  windowMs:10*60*1000,
+  message:"Too many requests",
+  max:10,
+  standardHeaders: true, 
+  legacyHeaders: false,
+})
 
 export default auth;
