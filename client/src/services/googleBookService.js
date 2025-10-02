@@ -31,8 +31,10 @@ export const searchBooks = async (query) => {
   const response = await axios.get(
     `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
       formattedQuery
-    )}&maxResults=20`
+    )}&maxResults=20&key=${import.meta.env.VITE_GOOGLEAPI_URL}`
   );
+
+
 
   // Normalize and filter results
   const items = response.data.items || [];

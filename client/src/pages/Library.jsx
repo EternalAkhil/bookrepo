@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   getBooks,
   deleteBook,
@@ -9,7 +9,8 @@ import {
 } from "../services/bookService";
 import BookCard from "../components/BookCard";
 import RecommendationModal from "../components/RecommendationModal";
-import { FaMagic } from "react-icons/fa"; // Add this import for the icon
+import { FaMagic } from "react-icons/fa"; 
+import toast from 'react-hot-toast';
 
 const statusMeta = {
   wishlist: {
@@ -33,6 +34,7 @@ const statusMeta = {
 
 const Library = () => {
   const [books, setBooks] = useState([]);
+  const [query,setQuery] = useState("")
 
   const fetchBooks = async () => {
     const res = await fetchAllBooks();
@@ -44,13 +46,30 @@ const Library = () => {
   }, []);
 
   const onUpdate = async (id, updateData) => {
-    await updateBook(id, updateData);
+    try {
+      await updateBook(id, updateData);
     fetchBooks();
+    toast.success("Updated successfully")
+      
+    } catch (error) {
+      toast.error(error)
+
+      
+    }
+    
   };
 
   const onDelete = async (id) => {
-    await deleteBook(id);
+    try {
+      await deleteBook(id);
+    toast.success("book deleted successfully!")
     fetchBooks();
+      
+    } catch (error) {
+      toast.error(error)
+      
+    }
+    
   };
 
   const groupedBooks = {
@@ -97,6 +116,7 @@ const Library = () => {
   const [recs, setRecs] = useState([]);
   const [loadingRecs, setLoadingRecs] = useState(false);
   const [recsError, setRecsError] = useState("");
+ 
 
 
   const handleGetRecommendations = async () => {
@@ -127,12 +147,56 @@ const Library = () => {
     setRecsError("");
   };
 
+  // search logic
+  const filteredBooks = useMemo(() => {
+	const lowercaseQuery = query.toLowerCase();
+	return books.filter((book) =>
+	  book.title.toLowerCase().includes(lowercaseQuery) ||
+	  book.author.toLowerCase().includes(lowercaseQuery)
+	);
+  }, [query]);
+
+
 
   return (
     <div className="p-2 sm:p-4 max-w-6xl mx-auto min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
       <h2 className="text-2xl sm:text-3xl font-extrabold mb-6 sm:mb-8 text-blue-800 flex items-center gap-2">
         <span role="img" aria-label="library">📚</span> My Library
       </h2>
+
+      {/* search bar */}
+      <div className="flex items-center justify-center max-auto">
+      <input
+          type="text"
+          placeholder="Search by title or author"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="flex border border-gray-300 p-4 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-400 transition bg-white/90 w-1/2 md:w-auto text-lg mb-4"
+        />
+      </div>
+
+      {/* Show books only when searched */}
+      {query.trim() !== "" ? (
+        <div className="grid md:grid-cols-3 gap-4 flex-wrap mb-4">
+          {filteredBooks.length > 0 ? (
+            filteredBooks.map((book) => (
+              <BookCard
+                key={book._id}
+                book={book}
+                onUpdate={onUpdate}
+                onDelete={onDelete}
+                onShowSummary={handleShowSummary}
+              />
+            ))
+          ) : (
+            <div className="text-gray-500 text-center w-full py-8">No books found for your search.</div>
+          )}
+        </div>
+      ) : (
+        <div className="text-gray-400 text-center w-full py-8">Search to see your books.</div>
+      )}
+
+      
 
       {/* popup code */}
       {selectedBook && (

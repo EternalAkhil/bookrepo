@@ -1,6 +1,7 @@
 import { useState } from "react";
 import API from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast"
 
 const Register = () => {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -14,11 +15,12 @@ const Register = () => {
     setLoading(true); // Start loader
     try {
       const res = await API.post("/auth/register", form);
-      alert("Registered successfully! Please login.");
+      toast.success("Registered successfully!");
       navigate("/login");
     } catch (err) {
       const msg = err.response?.data?.msg || "Registration failed.";
       setError(msg);
+      toast.error(msg)
     } finally {
       setLoading(false); // Stop loader
     }
@@ -80,11 +82,11 @@ const Register = () => {
           />
         </div>
 
-        {error && <p className="text-red-500 text-center">{error}</p>}
+        
 
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition flex items-center justify-center"
+          className="w-full bg-blue-600 hover:cursor-pointer hover:bg-blue-700 text-white font-semibold py-2 rounded transition flex items-center justify-center"
           disabled={loading}
         >
           {loading ? (

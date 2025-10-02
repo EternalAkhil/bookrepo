@@ -33,7 +33,7 @@ const Navbar = () => {
         {user && (
           <>
             <span className="text-base text-gray-600 font-semibold hidden md:inline">
-              Hello, <span className="text-blue-700">{user.user.name}</span>
+              Hello, <span className="text-blue-700">{user?user.user?.name:""}</span>
             </span>
             <button
               onClick={handleLogout}

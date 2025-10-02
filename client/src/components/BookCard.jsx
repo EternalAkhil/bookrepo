@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 
+
 const BookCard = ({ book, onUpdate, onDelete, onShowSummary }) => {
   const [showNotesModal, setShowNotesModal] = useState(false);
   const [notesInput, setNotesInput] = useState(book.notes || "");
+  
 
   const handleStatusChange = (e) => {
     onUpdate(book._id, { status: e.target.value });
@@ -21,8 +23,8 @@ const BookCard = ({ book, onUpdate, onDelete, onShowSummary }) => {
   // Save notes (append if not empty, else just update)
   const handleNotesSave = () => {
     let updatedNotes = notesInput;
-    // If you want to append, uncomment below:
-    // updatedNotes = (book.notes ? book.notes + "\n" : "") + notesInput;
+ 
+    updatedNotes = (book.notes ? book.notes + "\n" : "") + notesInput;
     onUpdate(book._id, { notes: updatedNotes });
     setShowNotesModal(false);
   };

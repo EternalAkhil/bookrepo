@@ -4,6 +4,7 @@ import { searchBooks } from "../services/googleBookService";
 import { addBook, getBooks,fetchAllBooks } from '../services/bookService';
 import Chatbot from '../components/Chatbot';
 import { AuthContext } from "../context/AuthContext";
+import toast from 'react-hot-toast'
 
 // Banner data
 const banners = [
@@ -31,15 +32,44 @@ const Home = () => {
   const [bannerIdx, setBannerIdx] = useState(0);
   const [recentBooks, setRecentBooks] = useState([]);
   const bannerTimeout = useRef();
+  const [loading,setLoading] = useState(false);
+
+
+  // search book
+  useEffect(()=>{
+
+    const res = localStorage.getItem("books")
+    if(res){
+      setSearchResults(JSON.parse(res)||[])
+    }
+
+  },[])
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    const results = await searchBooks(query);
-    setSearchResults(results || []);
+    try {
+      setLoading(true)
+      const results = await searchBooks(query);
+      
+      setSearchResults(results || []);
+      localStorage.setItem("books",JSON.stringify(results))
+      
+    } catch (error) {
+      toast.error("failed to fetch book!")
+      
+    }
+    finally{
+      setLoading(false)
+
+    }
+    
+
   };
 
+  // add books to library
   const handleGoogleAdd = async (info) => {
     console.log("add book called")
+
     const book = {
       title: info.title,
       author: info.authors?.join(", ") || "Unknown",
@@ -50,8 +80,16 @@ const Home = () => {
       description:info.description|| "",
       image: info.imageLinks?.thumbnail || "",
     };
-    await addBook(book);
-    alert(`Added "${info.title}" to your library`);
+    try {
+      await addBook(book);
+      toast.success(`Added "${info.title}" to your library`);
+      
+    } catch (error) {
+      toast.error("Failed to add book")
+      console.log(error)
+      
+    }
+    
   };
 
   // Carousel navigation
@@ -143,6 +181,29 @@ const Home = () => {
       </form>
 
       {/* Show search results from Google */}
+      {loading && (
+  <div className="flex items-center justify-center my-8">
+    <span className="flex items-center gap-3 text-blue-700 text-lg font-semibold">
+      <svg className="animate-spin h-6 w-6 text-blue-700" viewBox="0 0 24 24">
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+          fill="none"
+        />
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+        />
+      </svg>
+      Fetching books...
+    </span>
+  </div>
+)}
       {searchResults.length > 0 && (
         <section className="mb-16 max-w-5xl mx-auto px-2">
           <h3 className="font-bold mb-6 text-2xl text-blue-800 text-center">Search Results</h3>
@@ -157,7 +218,7 @@ const Home = () => {
       <Chatbot/>
 
       {/* Footer */}
-      <footer className="text-center text-gray-400 text-xs py-8 mt-8 px-2">
+      <footer className="w-full px-8 py-3 bg-gradient-to-r from-blue-50 via-white to-purple-50 text-center fixed bottom-0">
         &copy; {new Date().getFullYear()} BookRepo &mdash; Your personal reading companion.
       </footer>
     </div>
