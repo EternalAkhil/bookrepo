@@ -43,6 +43,14 @@ const Navbar = () => {
             </button>
           </>
         )}
+        {
+          user && user.user.role === "admin" && <Link
+          to="/admin"
+          className="bg-blue-500 hover:bg-blue-700 hover:cursor-pointer text-white px-4 py-1.5 rounded-lg font-semibold shadow transition text-base"
+        >
+          admin
+        </Link>
+        }
         {!user && (
           <Link
             to="/login"

@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import rateLimit from "express-rate-limit"
-const auth = (req, res, next) => {
+import User from "../models/user.model.js";
+const auth =  (req, res, next) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
   if (!token) return res.status(401).json({ msg: "No token, access denied" });
 
@@ -21,4 +22,21 @@ export const ratelimiter = rateLimit({
   legacyHeaders: false,
 })
 
+
+export const authorzationMiddleware = (...roles) => {
+  return async (req, res, next) => {
+    if (req.user) {
+      const user = await User.findById(req.user);
+      if (!user) {
+        return res.status(404).json({ msg: "User not found" });
+      }
+      if (!roles.includes(user.role)) {
+        return res.status(403).json({ msg: "Restricted route" });
+      }
+      next();
+    } else {
+      return res.status(403).json({ msg: "User not logged in" });
+    }
+  };
+};
 export default auth;

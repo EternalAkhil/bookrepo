@@ -5,6 +5,7 @@ import { addBook, getBooks,fetchAllBooks } from '../services/bookService';
 import Chatbot from '../components/Chatbot';
 import { AuthContext } from "../context/AuthContext";
 import toast from 'react-hot-toast'
+import API from '../services/api';
 
 // Banner data
 const banners = [
@@ -103,6 +104,9 @@ const Home = () => {
     }, 5000);
     return () => clearTimeout(bannerTimeout.current);
   }, [bannerIdx]);
+
+  // admin
+
 
 
   return (
@@ -214,6 +218,7 @@ const Home = () => {
           </div>
         </section>
       )}
+
       
       <Chatbot/>
 

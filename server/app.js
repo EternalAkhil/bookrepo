@@ -5,7 +5,7 @@ import cors from "cors";
 
 import helmet from 'helmet'
 app.use(express.json());
-app.use(helmet())
+// app.use(helmet())
 
 const allowedOrigins = [
     process.env.FRONTEND_URL, 
@@ -46,6 +46,12 @@ app.use("/api/books", bookRouter);
 
 import aiRouter from "./routes/airoute.routes.js";
 app.use("/api/ai", aiRouter);
+
+// admin routes
+import { authorzationMiddleware } from "./middleware/auth.middleware.js";
+import auth from "./middleware/auth.middleware.js";
+import admin from "./routes/admin.routes.js"
+app.use("/api/admin",auth,authorzationMiddleware("admin"),admin)
 
 // Home page
 app.get("/", async (req, res) => {

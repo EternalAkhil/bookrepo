@@ -8,7 +8,6 @@ const router = express.Router();
 // REGISTER
 router.post("/register", async (req, res) => {
     console.log("register called")
-    console.log(req.body)
   const { name, email, password } = req.body;
   try {
     const existingUser = await User.findOne({ email });
@@ -38,7 +37,7 @@ router.post("/login", async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-    res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
+    res.json({ token, user: { id: user._id, name: user.name, email: user.email ,role:user.role} });
   } catch (err) {
     console.log(err)
     res.status(500).json({ msg: err.message });

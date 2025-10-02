@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import Library from "./pages/Library";
 import { Toaster } from "react-hot-toast";
+import Admin from "./pages/Admin";
 
 
 const App = () => {
@@ -34,6 +35,13 @@ const App = () => {
         element={
           <ProtectedRoute>
             <Library/>
+          </ProtectedRoute>
+        }
+        />
+        <Route path="/admin"
+        element = {
+          <ProtectedRoute>
+            <Admin/>
           </ProtectedRoute>
         }
         />
